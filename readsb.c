@@ -351,6 +351,11 @@ static void backgroundTasks(void) {
         interactiveShowData();
     }
 
+    if (Modes.redis) {
+        redisSaveData();
+    }
+
+
     // always update end time so it is current when requests arrive
     Modes.stats_current.end = mstime();
 
@@ -427,6 +432,8 @@ static void backgroundTasks(void) {
 static void cleanup_and_exit(int code) {
     // Free any used memory
     interactiveCleanup();
+    redisCleanup();
+    free(Modes.redisHost);
     free(Modes.dev_name);
     free(Modes.filename);
     /* Free only when pointing to string in heap (strdup allocated when given as run parameter)
@@ -473,6 +480,15 @@ static void cleanup_and_exit(int code) {
 
 static error_t parse_opt(int key, char *arg, struct argp_state *state) {
     switch (key) {
+        case OptRedis:
+            Modes.redis = 1;
+            break;
+        case OptRedisHost:
+            Modes.redisHost = strdup(arg);
+            break;
+        case OptRedisPort:
+            Modes.redisPort = atoi(arg);
+            break;
         case OptDevice:
             Modes.dev_name = strdup(arg);
             break;
@@ -813,6 +829,15 @@ int main(int argc, char **argv) {
     writeJsonToFile("aircraft.json", generateAircraftJson());
 
     interactiveInit();
+    if(Modes.redisPort)
+    {
+        redisInit(Modes.redisHost, Modes.redisPort);
+    }
+    else
+    {
+        redisInit(Modes.redisHost, 6379);
+    }
+
 
     /* If the user specifies --net-only, just run in order to serve network
      * clients without reading data from the RTL device.

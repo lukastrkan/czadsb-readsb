@@ -404,6 +404,9 @@ struct _Modes
   int stats_latest_1min;
   int bUserFlags; // Flags relating to the user details
   int biastee;
+  int redis;
+  int redisPort;
+  char *redisHost;
   struct stats stats_current;
   struct stats stats_alltime;
   struct stats stats_periodic;
@@ -707,6 +710,9 @@ enum {
   OptBladeBw,
   OptPlutoUri,
   OptPlutoNetwork,
+  OptRedis,
+  OptRedisHost,
+  OptRedisPort
 };
 
 // This one needs modesMessage:
@@ -739,6 +745,10 @@ extern "C"
 
   // Provided by readsb.c & viewadsb.c
   void receiverPositionChanged (float lat, float lon, float alt);
+
+  void redisInit (char *host, int port);
+  void redisSaveData (void);
+  void redisCleanup (void);
 
 #ifdef __cplusplus
 }

@@ -77,6 +77,9 @@ static struct argp_option options[] =
 #endif
 #if defined(READSB)
     {"net", OptNet, 0, 0, "Enable networking", 2},
+    {"redis", OptRedis, 0, 0, "Enable redis", 2},
+    {"redis-host", OptRedisHost, "<ip/hostname>", 0, "Redis hostname", 2},
+    {"redis-port", OptRedisPort, "<port>", 0, "Redis port", 2},
     {"net-only", OptNetOnly, 0, 0, "Enable just networking, no RTL device or file used", 2},
     {"net-ri-port", OptNetRiPorts, "<ports>", 0, "TCP raw input listen ports  (default: 30001)", 2},
     {"net-ro-port", OptNetRoPorts, "<ports>", 0, "TCP raw output listen ports (default: 30002)", 2},
