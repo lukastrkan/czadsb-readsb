@@ -1,5 +1,7 @@
 # Readsb
 
+Buils eredis first as described here: https://github.com/EulerianTechnologies/eredis
+
 [Portmanteau of *Read ADSB*]
 
 Readsb is a Mode-S/ADSB/TIS decoder for RTLSDR, BladeRF, Modes-Beast and GNS5894 devices.
