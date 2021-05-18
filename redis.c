@@ -28,7 +28,7 @@ void redisInit(char* host, int port) {
         return;
 
     e = eredis_new();
-    eredis_host_add(e, "192.168.0.90", 6379);
+    eredis_host_add(e, host, port);
     eredis_run_thr(e);
     message = (char*) malloc(512*sizeof(char));
 }
