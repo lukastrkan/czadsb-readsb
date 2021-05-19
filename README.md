@@ -1,6 +1,6 @@
 # Readsb
 
-Buils eredis first as described here: https://github.com/EulerianTechnologies/eredis
+Build and install eredis first as described here: https://github.com/EulerianTechnologies/eredis
 
 [Portmanteau of *Read ADSB*]
 
