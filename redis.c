@@ -218,8 +218,6 @@ void redisSaveData(void){
     struct aircraft *a;
     int buflen = 256*2048; // The initial buffer is resized as needed
     char *buf = (char *) malloc(buflen), *p = buf, *end = buf + buflen;
-    char *line_start;
-    int first = 1;
     _messageNow = now;
     for (int j = 0; j < AIRCRAFTS_BUCKETS; j++) {
         for (a = Modes.aircrafts[j]; a; a = a->next) {
@@ -228,7 +226,6 @@ void redisSaveData(void){
             }
             if ((now - a->seen) > 90E3) // don't include stale aircraft in the JSON
                 continue;
-            line_start = p;
             p = safe_snprintf(p, end, "{\"hex\":\"%s%06x\"", (a->addr & MODES_NON_ICAO_ADDRESS) ? "~" : "", a->addr & 0xFFFFFF);
             if (a->addrtype != ADDR_ADSB_ICAO)
                 p = safe_snprintf(p, end, ",\"type\":\"%s\"", addrtype_enum_string(a->addrtype));
