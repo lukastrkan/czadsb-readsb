@@ -1,3 +1,0 @@
-[submodule "eredis"]
-	path = eredis
-	url = https://github.com/EulerianTechnologies/eredis
