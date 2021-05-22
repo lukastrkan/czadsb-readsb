@@ -80,6 +80,8 @@ static struct argp_option options[] =
     {"redis", OptRedis, 0, 0, "Enable redis", 2},
     {"redis-host", OptRedisHost, "<ip/hostname>", 0, "Redis hostname", 2},
     {"redis-port", OptRedisPort, "<port>", 0, "Redis port", 2},
+    {"redis-single", OptRedisSingle, 0, 0, "Save single aircrafts", 2},
+    {"redis-all", OptRedisAll, 0, 0, "Save all aircrafts", 2},
     {"net-only", OptNetOnly, 0, 0, "Enable just networking, no RTL device or file used", 2},
     {"net-ri-port", OptNetRiPorts, "<ports>", 0, "TCP raw input listen ports  (default: 30001)", 2},
     {"net-ro-port", OptNetRoPorts, "<ports>", 0, "TCP raw output listen ports (default: 30002)", 2},

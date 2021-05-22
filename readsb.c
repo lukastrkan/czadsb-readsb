@@ -352,7 +352,15 @@ static void backgroundTasks(void) {
     }
 
     if (Modes.redis) {
-        redisSaveData();
+        if(Modes.redisSingle)
+        {
+            redisSaveSingle();
+        }
+        if(Modes.redisAll || (!Modes.redisAll && !Modes.redisSingle))
+        {
+            redisSaveAll();
+        }        
+        
     }
 
 
@@ -488,6 +496,12 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state) {
             break;
         case OptRedisPort:
             Modes.redisPort = atoi(arg);
+            break;
+        case OptRedisSingle:
+            Modes.redisSingle = 1;
+            break;
+        case OptRedisAll:
+            Modes.redisAll = 1;
             break;
         case OptDevice:
             Modes.dev_name = strdup(arg);

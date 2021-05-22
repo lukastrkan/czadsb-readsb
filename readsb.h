@@ -407,6 +407,8 @@ struct _Modes
   int redis;
   int redisPort;
   char *redisHost;
+  int redisSingle;
+  int redisAll;
   struct stats stats_current;
   struct stats stats_alltime;
   struct stats stats_periodic;
@@ -712,7 +714,9 @@ enum {
   OptPlutoNetwork,
   OptRedis,
   OptRedisHost,
-  OptRedisPort
+  OptRedisPort,
+  OptRedisSingle,
+  OptRedisAll
 };
 
 // This one needs modesMessage:
@@ -747,7 +751,8 @@ extern "C"
   void receiverPositionChanged (float lat, float lon, float alt);
 
   void redisInit (char *host, int port);
-  void redisSaveData (void);
+  void redisSaveSingle (void);
+  void redisSaveAll(void);
   void redisCleanup (void);
 
 #ifdef __cplusplus

@@ -1,6 +1,7 @@
 #include "readsb.h"
 
 #include "eredis.h"
+#include "net_io.h"
 
 
 //
@@ -213,7 +214,14 @@ void redisCleanup(void) {
     }
 }
 
-void redisSaveData(void){
+void redisSaveAll(void){
+    struct char_buffer planes = generateAircraftJson();    
+    eredis_w_cmd(e, "SET json %s", planes.buffer);    
+    eredis_w_cmd(e, "EXPIRE json 10");
+    free(planes.buffer);
+}
+
+void redisSaveSingle(void){
     uint64_t now = mstime();
     struct aircraft *a;
     int buflen = 256*2048; // The initial buffer is resized as needed
