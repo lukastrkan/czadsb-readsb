@@ -1871,6 +1871,20 @@ static const char *nav_altitude_source_enum_string(nav_altitude_source_t src) {
     }
 }
 
+static double convert_altitude(double ft) {
+    if (Modes.metric)
+        return (ft / 3.2828);
+    else
+        return ft;
+}
+
+static double convert_speed(double kts) {
+    if (Modes.metric)
+        return (kts * 1.852);
+    else
+        return kts;
+}
+
 struct char_buffer generateAircraftJson(){
     struct char_buffer cb;
     uint64_t now = mstime();
@@ -1918,11 +1932,11 @@ retry:
                     p = safe_snprintf(p, end, ",\"alt_geom\":%d", a->altitude_geom);
             }
             if (trackDataValid(&a->gs_valid))
-                p = safe_snprintf(p, end, ",\"gs\":%.1f", a->gs);
+                p = safe_snprintf(p, end, ",\"gs\":%.1f",  convert_speed(a->gs));
             if (trackDataValid(&a->ias_valid))
-                p = safe_snprintf(p, end, ",\"ias\":%u", a->ias);
+                p = safe_snprintf(p, end, ",\"ias\":%.1f", convert_speed(a->ias));
             if (trackDataValid(&a->tas_valid))
-                p = safe_snprintf(p, end, ",\"tas\":%u", a->tas);
+                p = safe_snprintf(p, end, ",\"tas\":%.1f", convert_speed(a->tas));
             if (trackDataValid(&a->mach_valid))
                 p = safe_snprintf(p, end, ",\"mach\":%.3f", a->mach);
             if (trackDataValid(&a->track_valid))
@@ -1936,9 +1950,9 @@ retry:
             if (trackDataValid(&a->true_heading_valid))
                 p = safe_snprintf(p, end, ",\"true_heading\":%.1f", a->true_heading);
             if (trackDataValid(&a->baro_rate_valid))
-                p = safe_snprintf(p, end, ",\"baro_rate\":%d", a->baro_rate);
+                p = safe_snprintf(p, end, ",\"baro_rate\":%d", (int)convert_altitude(a->baro_rate));
             if (trackDataValid(&a->geom_rate_valid))
-                p = safe_snprintf(p, end, ",\"geom_rate\":%d", a->geom_rate);
+                p = safe_snprintf(p, end, ",\"geom_rate\":%d", (int)convert_altitude(a->geom_rate));
             if (trackDataValid(&a->squawk_valid))
                 p = safe_snprintf(p, end, ",\"squawk\":\"%04x\"", a->squawk);
             if (trackDataValid(&a->emergency_valid))
