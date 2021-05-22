@@ -321,8 +321,9 @@ void redisSaveSingle(void){
                               10 * log10((a->signalLevel[0] + a->signalLevel[1] + a->signalLevel[2] + a->signalLevel[3] +
                                           a->signalLevel[4] + a->signalLevel[5] + a->signalLevel[6] + a->signalLevel[7] + 1e-5) / 8));
 
-            eredis_w_cmd(e, "SET %s%06X %s", (a->addr & MODES_NON_ICAO_ADDRESS) ? "~" : " ", (a->addr & 0xffffff), buf);
-            eredis_w_cmd(e, "EXPIRE %s%06X %d", (a->addr & MODES_NON_ICAO_ADDRESS) ? "~" : " ", (a->addr & 0xffffff), 60);
+            //eredis_w_cmd(e, "SET %06X %s", (a->addr & 0xffffff), buf);
+            eredis_w_cmd(e, "PUBLISH newAircraft %s", buf);
+            //eredis_w_cmd(e, "EXPIRE %06X %d", (a->addr & 0xffffff), 60);
             free(buf);
             buf = (char *) malloc(buflen), p = buf, end = buf + buflen;
         }
