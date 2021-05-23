@@ -322,7 +322,13 @@ void redisSaveSingle(void){
                                           a->signalLevel[4] + a->signalLevel[5] + a->signalLevel[6] + a->signalLevel[7] + 1e-5) / 8));
 
             //eredis_w_cmd(e, "SET %06X %s", (a->addr & 0xffffff), buf);
-            eredis_w_cmd(e, "PUBLISH newAircraft %s", buf);
+            if((now - a->seen) >= 59) {
+                eredis_w_cmd(e, "PUBLISH delAircraft %s", buf);
+            }
+            else {
+                eredis_w_cmd(e, "PUBLISH newAircraft %s", buf);
+            }
+            
             //eredis_w_cmd(e, "EXPIRE %06X %d", (a->addr & 0xffffff), 60);
             free(buf);
             buf = (char *) malloc(buflen), p = buf, end = buf + buflen;
