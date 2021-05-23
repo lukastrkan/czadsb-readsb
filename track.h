@@ -243,6 +243,7 @@ struct aircraft
   uint32_t padding2;
   struct modesMessage first_message; // A copy of the first message we received for this aircraft.
   struct aircraft *next; // Next aircraft in our linked list
+  int delReported;
 };
 
 /* Mode A/C tracking is done separately, not via the aircraft list,

@@ -322,11 +322,19 @@ void redisSaveSingle(void){
                                           a->signalLevel[4] + a->signalLevel[5] + a->signalLevel[6] + a->signalLevel[7] + 1e-5) / 8));
 
             //eredis_w_cmd(e, "SET %06X %s", (a->addr & 0xffffff), buf);
-            if((now - a->seen) >= 59) {
-                eredis_w_cmd(e, "PUBLISH delAircraft %s", buf);
+            if((now - a->seen) >= 30E3) {
+                if(!a->delReported)
+                {
+                    eredis_w_cmd(e, "PUBLISH delAircraft %s", buf);
+                    a->delReported = 1;
+                }                 
             }
             else {
                 eredis_w_cmd(e, "PUBLISH newAircraft %s", buf);
+                if(a->delReported)
+                {
+                    a->delReported = 0;
+                }
             }
             
             //eredis_w_cmd(e, "EXPIRE %06X %d", (a->addr & 0xffffff), 60);
