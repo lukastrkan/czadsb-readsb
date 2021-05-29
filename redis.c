@@ -329,12 +329,17 @@ void redisSaveSingle(void){
                     a->delReported = 1;
                 }                 
             }
-            else {
-                eredis_w_cmd(e, "PUBLISH newAircraft %s", buf);
-                if(a->delReported)
+            else 
+            {
+                if(now - a->lastReport >= 5000)
                 {
-                    a->delReported = 0;
-                }
+                    a->lastReport = now;
+                    eredis_w_cmd(e, "PUBLISH newAircraft %s", buf);
+                    if(a->delReported)
+                    {
+                        a->delReported = 0;
+                    }
+                }                
             }
             
             //eredis_w_cmd(e, "EXPIRE %06X %d", (a->addr & 0xffffff), 60);
