@@ -195,6 +195,7 @@ static double convert_speed(double kts) {
 
 eredis_t *e;
 char *message;
+uint64_t lastReport = 0;
 
 void redisInit(char* host, int port) {
     if (!Modes.redis)
@@ -214,11 +215,17 @@ void redisCleanup(void) {
     }
 }
 
-void redisSaveAll(void){
-    struct char_buffer planes = generateAircraftJson();    
-    eredis_w_cmd(e, "SET json %s", planes.buffer);    
-    eredis_w_cmd(e, "EXPIRE json 10");
-    free(planes.buffer);
+void redisSaveAll(void){    
+    if(mstime() > lastReport + 500)
+    {
+        struct char_buffer planes = generateAircraftJson();    
+        eredis_w_cmd(e, "PUBLISH updateJson %s", planes.buffer);
+        eredis_w_cmd(e, "SET json %s", planes.buffer);    
+        eredis_w_cmd(e, "EXPIRE json 10");
+        free(planes.buffer);
+        lastReport = mstime();
+    }
+    
 }
 
 void redisSaveSingle(void){
@@ -320,8 +327,7 @@ void redisSaveSingle(void){
                               a->messages, (now - a->seen) / 1000.0,
                               10 * log10((a->signalLevel[0] + a->signalLevel[1] + a->signalLevel[2] + a->signalLevel[3] +
                                           a->signalLevel[4] + a->signalLevel[5] + a->signalLevel[6] + a->signalLevel[7] + 1e-5) / 8));
-
-            //eredis_w_cmd(e, "SET %06X %s", (a->addr & 0xffffff), buf);
+            
             if((now - a->seen) >= 30E3) {
                 if(!a->delReported)
                 {
@@ -341,8 +347,7 @@ void redisSaveSingle(void){
                     }
                 }                
             }
-            
-            //eredis_w_cmd(e, "EXPIRE %06X %d", (a->addr & 0xffffff), 60);
+                        
             free(buf);
             buf = (char *) malloc(buflen), p = buf, end = buf + buflen;
         }
